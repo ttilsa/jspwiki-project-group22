@@ -30,6 +30,7 @@ import org.apache.wiki.util.PropertyReader;
 import org.apache.wiki.util.TextUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -54,6 +55,11 @@ public class Preferences extends HashMap< String,String > {
      * The name under which a Preferences object is stored in the HttpSession. Its value is {@value}.
      */
     public static final String SESSIONPREFS = "prefs";
+    
+    /**
+     * The name of the cookie of the user preferences.
+     */
+    public static final String PREFS_COOKIE_NAME = "JSPWikiUserPrefs"; 
 
     private static final Logger log = Logger.getLogger( Preferences.class );
 
@@ -118,6 +124,16 @@ public class Preferences extends HashMap< String,String > {
         pageContext.getSession().setAttribute( SESSIONPREFS, prefs );
     }
 
+    /**
+     * 
+     * Removes the preferences
+     * 
+     * @param pageContext The page context.
+     */
+    public static void clearPreferencesCookie( final HttpServletResponse response, final PageContext pageContext ) {
+    	HttpUtil.removeCookie( response , "JSPWikiUserPrefs" );
+    	pageContext.getSession().removeAttribute(SESSIONPREFS);    
+    }
 
     /**
      * Parses new-style preferences stored as JSON objects and stores them in the session.  Everything in the cookie is stored.
