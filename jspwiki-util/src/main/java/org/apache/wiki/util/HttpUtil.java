@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
@@ -58,6 +59,19 @@ public final class HttpUtil {
 		return StringUtils.isNotEmpty ( req.getHeader( "X-Forwarded-For" ) ) ? req.getHeader( "X-Forwarded-For" ) : 
 			                                                                          req.getRemoteAddr();
 	}
+    
+    /**
+     * Attempts to remove a cookie by expiring it immediately.
+     * 
+     * @param response The current response
+     * @param name The name of the cookie to remove
+     */
+    public static void removeCookie( final HttpServletResponse response,
+            final String name) {
+        Cookie cookie = new Cookie(name, "");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
 
     /**
      *  Attempts to retrieve the given cookie value from the request. Returns the string value (which may or may not be decoded
@@ -72,7 +86,7 @@ public final class HttpUtil {
         final Cookie[] cookies = request.getCookies();
         if( cookies != null ) {
             for( final Cookie cookie : cookies ) {
-                if( cookie.getName().equals( cookieName ) ) {
+            	if( cookie.getName().equals( cookieName ) ) {
                     String value = cookie.getValue();
                     if( value == null || value.length() == 0 ) {
                         return null;
