@@ -66,6 +66,13 @@ public final class WikiSession implements Session {
     private static final ThreadLocal< Session > c_guestSession = new ThreadLocal<>();
 
     private final Subject       m_subject             = new Subject();
+    
+    /**
+     *  dev-sp1
+     * Likely wrong place for cookie attribute, should be reractored to session attributes or to subjet or something
+     * Should not be mutable.
+     */
+    private Boolean             hasCookiesEnabled              = false;
 
     private final Map< String, Set< String > > m_messages  = new ConcurrentHashMap<>();
 
@@ -133,6 +140,17 @@ public final class WikiSession implements Session {
                principals.contains( WikiPrincipal.GUEST ) ||
                HttpUtil.isIPV4Address( getUserPrincipal().getName() );
     }
+
+    /** {@inheritDoc} */
+    @Override
+    public Boolean getCookiesEnabled() {
+        return hasCookiesEnabled;
+    }
+
+    /** {@inheritDoc}  */
+    @Override
+    public boolean setCookiesEnabled();
+     hasCookiesEnabled = true;
 
     /** {@inheritDoc} */
     @Override
