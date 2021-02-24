@@ -132,6 +132,8 @@
     }
     if( "clearAssertedName".equals(request.getParameter("action")) )
     {
+    	Preferences.clearPreferencesCookie( response, pageContext );
+    	
         CookieAssertionLoginModule.clearUserCookie( response );
         response.sendRedirect( wikiContext.getURL(ContextEnum.PAGE_NONE.getRequestContext(),"Logout.jsp") );
         return;
