@@ -111,6 +111,11 @@
     <maven.compiler.source>${jdk.version}</maven.compiler.source> <!-- override values from parent pom -->
     <maven.compiler.target>${jdk.version}</maven.compiler.target>
     <minimize>true</minimize> <!-- wro4j compression -->
+	  
+    <!--SonarCloud integration -->
+    <sonar.projectKey>ttilsa_jspwiki-project-group22</sonar.projectKey>
+    <sonar.organization>jspwiki-project-group22</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
   </properties>
 
   <scm>
