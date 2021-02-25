@@ -1,6 +1,6 @@
 name: manual_build_sonar
 on:
-  push:
+  workflow_dispatch:
     branches:
       - develop-sprint-1
   pull_request:
