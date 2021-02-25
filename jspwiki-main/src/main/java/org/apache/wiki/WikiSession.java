@@ -72,7 +72,7 @@ public final class WikiSession implements Session {
      * Likely wrong place for cookie attribute, should be reractored to session attributes or to subjet or something
      * Should not be mutable.
      */
-    private Boolean             hasCookiesEnabled              = false;
+    private Boolean             cookiesEnabled              = false;
 
     private final Map< String, Set< String > > m_messages  = new ConcurrentHashMap<>();
 
@@ -143,14 +143,15 @@ public final class WikiSession implements Session {
 
     /** {@inheritDoc} */
     @Override
-    public Boolean getCookiesEnabled() {
-        return hasCookiesEnabled;
+    public boolean getCookiesEnabled() {
+        return cookiesEnabled;
     }
 
     /** {@inheritDoc}  */
     @Override
-    public boolean setCookiesEnabled();
-     hasCookiesEnabled = true;
+    public void setCookiesEnabled(boolean selection) {
+        cookiesEnabled = selection;
+    }
 
     /** {@inheritDoc} */
     @Override

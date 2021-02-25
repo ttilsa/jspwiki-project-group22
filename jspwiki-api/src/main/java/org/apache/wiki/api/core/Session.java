@@ -71,7 +71,7 @@ public interface Session extends WikiEventListener {
     /** dev-sp1 not sure what to do here 
     * Users cookie setting
     */
-    Boolean  hasCookiesEnabled = false;
+    //Boolean  hasCookiesEnabled = false;
     
 
     /** dev-sp1
@@ -84,8 +84,9 @@ public interface Session extends WikiEventListener {
 
     /** dev-sp1
      * Allow cookies to be set for the user
+    * @param selection Value for cookie preference. True to enable cookies, false to disable cookies.
      */
-    boolean setCookiesEnabled();
+    void setCookiesEnabled(boolean selection);
 
     /**
      * Returns <code>true</code> if the user is considered asserted via a session cookie; that is, the Subject contains the Principal
