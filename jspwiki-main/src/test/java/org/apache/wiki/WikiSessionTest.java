@@ -64,6 +64,30 @@ public class WikiSessionTest
         final Properties props = TestEngine.getTestProperties();
         m_engine = new TestEngine( props );
     }
+    
+    /**
+     * 
+     * dev-sp1
+     * Tests setCookiesEnabled method changes cookiesEnabled variable.
+     * 
+     */
+    @Test
+    public void testCookiesEnabled() throws Exception
+    {
+    	final MockHttpServletRequest request = m_engine.newHttpRequest();
+        final Session wikiSession;
+        
+        // create new session
+        wikiSession = Wiki.session().find( m_engine, request );
+        
+        // set cookies to true
+        wikiSession.setCookiesEnabled(true);
+        Assertions.assertTrue( wikiSession.getCookiesEnabled() );
+        
+        // set cookies to false
+        wikiSession.setCookiesEnabled(false);
+        Assertions.assertFalse( wikiSession.getCookiesEnabled() );
+    }
 
     @Test
     public void testRoles() throws Exception
