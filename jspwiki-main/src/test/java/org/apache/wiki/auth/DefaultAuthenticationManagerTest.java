@@ -43,7 +43,7 @@ class DefaultAuthenticationManagerTest {
         wikiSession.setCookiesEnabled(false);
     	
         boolean isLoginSucceed = m_auth.login( request );
-        Assertions.assertEquals( isLoginSucceed, false );
+        Assertions.assertFalse( isLoginSucceed );
     }
     
     /**
@@ -66,6 +66,6 @@ class DefaultAuthenticationManagerTest {
         wikiSession.setCookiesEnabled(true);
     	
         boolean isLoginSucceed = m_auth.login( request );
-        Assertions.assertEquals( isLoginSucceed, true );
+        Assertions.assertTrue( isLoginSucceed );
     }
 }
