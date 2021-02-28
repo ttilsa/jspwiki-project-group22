@@ -358,7 +358,18 @@ public class WikiSessionTest
         runSecurityFilter(engine, request);
 
         // Make sure the user is actually asserted
-        return Wiki.session().find( engine, request );
+        Session wikiSession = Wiki.session().find( engine, request );
+        
+        /*
+         *dev-sp1
+         *Fix broken test caused by disabled cookies 
+         */
+        if( !wikiSession.getCookiesEnabled() ) {
+        	wikiSession.setCookiesEnabled(true);
+        	runSecurityFilter(engine, request);
+        	wikiSession = Wiki.session().find( engine, request );
+        }
+        return wikiSession;
     }
 
     public static Session adminSession( final TestEngine engine ) throws Exception
@@ -402,7 +413,18 @@ public class WikiSessionTest
         runSecurityFilter(engine,request);
 
         // Make sure the user is actually authenticated
-        final Session session = Wiki.session().find( engine, request );
+        Session session = Wiki.session().find( engine, request );
+        
+        /*
+         *dev-sp1
+         *Fix broken test caused by disabled cookies 
+         */
+        if( !session.getCookiesEnabled() ) {
+        	session.setCookiesEnabled(true);
+        	runSecurityFilter(engine, request);
+        	session = Wiki.session().find( engine, request );
+        }
+        
         if ( !session.isAuthenticated() )
         {
             throw new IllegalStateException( "Could not log in authenticated user '" + id + "'" );
