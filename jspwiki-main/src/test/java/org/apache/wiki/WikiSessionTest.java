@@ -157,13 +157,27 @@ public class WikiSessionTest
     public void testUserPrincipal() throws ServletException, IOException
     {
         final MockHttpServletRequest request;
-        final Session wikiSession;
+        Session wikiSession;
 
         // Changing the UserPrincipal value should cause the user to be authenticated...
         request = m_engine.newHttpRequest();
         request.setUserPrincipal( new WikiPrincipal( "Fred Flintstone") );
         runSecurityFilter(m_engine, request);
         wikiSession = Wiki.session().find( m_engine, request );
+        
+        /*
+         * dev-sp1 
+         * fix broken test caused by disabled cookies.
+         * cookies are disabled as default which causes login failure.
+         * set cookiesEnalbed to true for successful login.
+         */
+        if (!wikiSession.getCookiesEnabled()) {
+        	wikiSession.setCookiesEnabled(true); 	
+        	runSecurityFilter(m_engine, request);
+            wikiSession = Wiki.session().find( m_engine, request );
+        }
+        /* dev-sp1 */
+        
         Assertions.assertTrue( wikiSession.isAuthenticated());
         Assertions.assertEquals( "Fred Flintstone", wikiSession.getUserPrincipal().getName() );
     }
@@ -172,15 +186,32 @@ public class WikiSessionTest
     public void testAssertionCookie() throws ServletException, IOException
     {
         final MockHttpServletRequest request;
-        final Session wikiSession;
+        Session wikiSession;
 
         // Adding the magic "assertion cookie" should  set asserted status.
         request = m_engine.newHttpRequest();
         request.setUserPrincipal( null );
         final String cookieName = CookieAssertionLoginModule.PREFS_COOKIE_NAME;
         request.setCookies( new Cookie[] { new Cookie( cookieName, "FredFlintstone" ) } );
+        
+        
         runSecurityFilter(m_engine, request);
         wikiSession = Wiki.session().find( m_engine, request );
+        
+        /*
+         * dev-sp1 
+         * fix broken test caused by disabled cookies.
+         * cookies are disabled as default which causes login failure.
+         * set cookiesEnalbed to true for successful login.
+         */
+        if (!wikiSession.getCookiesEnabled()) {
+        	Assertions.assertFalse( wikiSession.isAsserted());
+        	wikiSession.setCookiesEnabled(true); 	
+        	runSecurityFilter(m_engine, request);
+            wikiSession = Wiki.session().find( m_engine, request );
+        }
+        /* dev-sp1 */
+                
         Assertions.assertTrue( wikiSession.isAsserted());
         Assertions.assertEquals( "FredFlintstone", wikiSession.getUserPrincipal().getName() );
     }
@@ -189,7 +220,7 @@ public class WikiSessionTest
     public void testAuthenticationCookieDefaults() throws ServletException, IOException
     {
         final MockHttpServletRequest request;
-        final Session wikiSession;
+        Session wikiSession;
 
         // Set the authentication cookie first
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -205,6 +236,20 @@ public class WikiSessionTest
         request.setCookies( new Cookie[] { new Cookie( "JSPWikiUID", uid ) } );
         runSecurityFilter(m_engine, request);
         wikiSession = Wiki.session().find( m_engine, request );
+
+        /*
+         * dev-sp1 
+         * fix broken test caused by disabled cookies.
+         * cookies are disabled as default which causes login failure.
+         * set cookiesEnalbed to true for successful login.
+         */
+        if (!wikiSession.getCookiesEnabled()) {
+        	wikiSession.setCookiesEnabled(true); 	
+        	runSecurityFilter(m_engine, request);
+            wikiSession = Wiki.session().find( m_engine, request );
+        }
+        /* dev-sp1 */
+        
         Assertions.assertTrue( wikiSession.isAnonymous());
         Assertions.assertFalse( wikiSession.isAuthenticated());
         Assertions.assertEquals( "127.0.0.1", wikiSession.getUserPrincipal().getName() );
@@ -222,7 +267,7 @@ public class WikiSessionTest
         m_engine = new TestEngine( props );
 
         final MockHttpServletRequest request;
-        final Session wikiSession;
+        Session wikiSession;
 
         // Set the authentication cookie first
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -237,6 +282,20 @@ public class WikiSessionTest
         request.setCookies( new Cookie[] { new Cookie( "JSPWikiUID", uid ) } );
         runSecurityFilter(m_engine, request);
         wikiSession = Wiki.session().find( m_engine, request );
+        
+        /*
+         * dev-sp1 
+         * fix broken test caused by disabled cookies.
+         * cookies are disabled as default which causes login failure.
+         * set cookiesEnalbed to true for successful login.
+         */
+        if (!wikiSession.getCookiesEnabled()) {
+        	wikiSession.setCookiesEnabled(true); 	
+        	runSecurityFilter(m_engine, request);
+            wikiSession = Wiki.session().find( m_engine, request );
+        }
+        /* dev-sp1 */
+        
         Assertions.assertFalse( wikiSession.isAnonymous());
         Assertions.assertTrue( wikiSession.isAuthenticated());
         Assertions.assertEquals( "Fred Flintstone", wikiSession.getUserPrincipal().getName() );
