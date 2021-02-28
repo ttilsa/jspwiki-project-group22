@@ -72,7 +72,7 @@ public final class WikiSession implements Session {
      * Likely wrong place for cookie attribute, should be reractored to session attributes or to subjet or something
      * Should not be mutable.
      */
-    private Boolean             cookiesEnabled              = true;
+    private Boolean             cookiesEnabled              = false;
 
     private final Map< String, Set< String > > m_messages  = new ConcurrentHashMap<>();
 
