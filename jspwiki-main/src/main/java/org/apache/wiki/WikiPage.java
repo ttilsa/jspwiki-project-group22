@@ -18,6 +18,7 @@
  */
 package org.apache.wiki;
 
+import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Page;
 import org.apache.wiki.api.providers.PageProvider;
@@ -60,6 +61,27 @@ public class WikiPage implements Page {
         m_engine = engine;
         m_name = name;
         m_wiki = engine.getApplicationName();
+    }
+
+    /**
+     * Create a new WikiPage using existing page content as template.
+     *
+     * @param engine The Engine that owns this page.
+     * @param name   The name of the page.
+     * @param context The context from where the page creation was triggered.
+     */
+    public WikiPageTemplate( final Engine engine, final String name, final Context context ) throws WikiException {
+        m_engine = engine;
+        m_name = name;
+        m_wiki = engine.getApplicationName();
+
+        // Get the content of the page from where the creation of a new page was triggered.
+        final Page templatePage = context.getPage();
+        final PageManager pageManager = m_engine.getPageManager();
+        final String templateText = pageManager.getPageText( page.getName(), page.getVersion() );
+
+        // Save the content text to the repository
+        pageManager.saveText(context, templateText);
     }
 
     /**
@@ -330,7 +352,7 @@ public class WikiPage implements Page {
             
         return p;
     }
-    
+
     /**
      *  Compares a page with another by name using the defined PageNameComparator.  If the same name, compares their versions.
      *  
