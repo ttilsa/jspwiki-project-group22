@@ -1,4 +1,4 @@
-git git name: manual_build_sonar
+name: manual_build_sonar
 on:
   workflow_dispatch:
     branches:
