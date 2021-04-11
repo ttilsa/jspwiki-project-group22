@@ -26,6 +26,7 @@ import org.apache.wiki.auth.acl.Acl;
 import org.apache.wiki.auth.acl.AclEntry;
 import org.apache.wiki.auth.acl.AclImpl;
 import org.apache.wiki.pages.PageManager;
+import org.apache.wiki.api.exceptions.WikiException;
 
 import java.util.Date;
 import java.util.Enumeration;
@@ -70,18 +71,17 @@ public class WikiPage implements Page {
      * @param name   The name of the page.
      * @param context The context from where the page creation was triggered.
      */
-    public WikiPageTemplate( final Engine engine, final String name, final Context context ) throws WikiException {
+    public WikiPage( final Engine engine, final String name, final Context context ) throws WikiException {
         m_engine = engine;
         m_name = name;
         m_wiki = engine.getApplicationName();
 
         // Get the content of the page from where the creation of a new page was triggered.
         final Page templatePage = context.getPage();
-        final PageManager pageManager = m_engine.getPageManager();
-        final String templateText = pageManager.getPageText( page.getName(), page.getVersion() );
-
+        final String templateText = m_engine.getManager( PageManager.class ).getText( templatePage );
+        
         // Save the content text to the repository
-        pageManager.saveText(context, templateText);
+        m_engine.getManager( PageManager.class ).saveText(context, templateText);
     }
 
     /**

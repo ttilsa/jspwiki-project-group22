@@ -37,6 +37,8 @@ import org.apache.wiki.util.TextUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.apache.wiki.WikiPage;
+import org.apache.wiki.api.core.Context;
 
 import java.io.File;
 import java.util.Collection;
@@ -259,6 +261,23 @@ public class DefaultPageManagerTest {
 
         engine.saveText( name, text );
         Assertions.assertTrue( engine.getManager( PageManager.class ).wikiPageExists( name ), "page does not exist" );
+    }
+
+    // dev-sp2
+    @Test
+    public void testCreatePageTemplate() throws Exception {
+        final String text = "Few general reusable bits";
+        final String name = "sourcePage";
+        final WikiPage sourcePage = new WikiPage(engine, "sourcePage");
+        final Context context = Wiki.context().create(engine, sourcePage );
+        final WikiPage newPage = new WikiPage(engine, "newPage", context);
+       
+     
+        Assertions.assertFalse( engine.getManager( PageManager.class ).wikiPageExists( name ), "page should not exist right now" );
+
+        engine.saveText( name, text );
+        Assertions.assertTrue( engine.getManager( PageManager.class ).wikiPageExists( name ), "page does not exist" );
+       
     }
 
     @Test
