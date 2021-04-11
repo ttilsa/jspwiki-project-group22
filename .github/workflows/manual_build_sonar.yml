@@ -1,8 +1,8 @@
-name: manual_build_sonar
+git git name: manual_build_sonar
 on:
   workflow_dispatch:
     branches:
-      - develop-sprint-1
+      - develop-sprint-2
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:

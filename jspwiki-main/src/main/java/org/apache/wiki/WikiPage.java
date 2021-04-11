@@ -76,11 +76,11 @@ public class WikiPage implements Page {
         m_name = name;
         m_wiki = engine.getApplicationName();
 
-        // Get the content of the page from where the creation of a new page was triggered.
+        // Get the content of the source page.
         final Page templatePage = context.getPage();
         final String templateText = m_engine.getManager( PageManager.class ).getText( templatePage );
         
-        // Save the content text to the repository
+        // Save the content text for the new page to the repository.
         m_engine.getManager( PageManager.class ).saveText(context, templateText);
     }
 
