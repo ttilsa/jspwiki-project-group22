@@ -39,7 +39,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.apache.wiki.WikiPage;
 import org.apache.wiki.api.core.Context;
-
+import org.apache.wiki.WikiContext;
 import java.io.File;
 import java.util.Collection;
 import java.util.Properties;
@@ -266,18 +266,26 @@ public class DefaultPageManagerTest {
     // dev-sp2
     @Test
     public void testCreatePageTemplate() throws Exception {
-        final String text = "Few general reusable bits";
-        final String name = "sourcePage";
-        final WikiPage sourcePage = new WikiPage(engine, "sourcePage");
-        final Context context = Wiki.context().create(engine, sourcePage );
-        final WikiPage newPage = new WikiPage(engine, "newPage", context);
-       
-     
-        Assertions.assertFalse( engine.getManager( PageManager.class ).wikiPageExists( name ), "page should not exist right now" );
+        final String sourceText = "Few general reusable bits";
+        final String sourceName = "sourcePage";
+        final String newName = "newPage";
 
-        engine.saveText( name, text );
-        Assertions.assertTrue( engine.getManager( PageManager.class ).wikiPageExists( name ), "page does not exist" );
-       
+        Assertions.assertFalse( engine.getManager( PageManager.class ).wikiPageExists( sourceName ), "Source page should not exist right now" );
+        Assertions.assertFalse( engine.getManager( PageManager.class ).wikiPageExists( newName ), "New page should not exist right now" );
+
+        // Create source page to be used as a template
+        final WikiPage sourcePage = new WikiPage(engine, sourceName);
+        engine.saveText( sourceName, sourceText );
+    
+        // Save created new page to the repository
+        final WikiPage newPage = new WikiPage(engine, newName, sourcePage);
+        final String newText = engine.getManager( PageManager.class ).getText( sourceName, WikiProvider.LATEST_VERSION );
+        engine.saveText( newName, newText );
+
+        // Test that the new page exists and the contents match the source template
+        Assertions.assertTrue( engine.getManager( PageManager.class ).wikiPageExists( sourceName ), "Source page does not exist" );
+        Assertions.assertTrue( engine.getManager( PageManager.class ).wikiPageExists( newName ), "New page does not exist" );
+        Assertions.assertEquals(sourceText.trim(), newText.trim());
     }
 
     @Test

@@ -20,13 +20,17 @@ package org.apache.wiki;
 
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
+import org.apache.wiki.WikiEngine;
 import org.apache.wiki.api.core.Page;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.auth.acl.Acl;
 import org.apache.wiki.auth.acl.AclEntry;
 import org.apache.wiki.auth.acl.AclImpl;
 import org.apache.wiki.pages.PageManager;
+import org.apache.wiki.pages.DefaultPageManager;
 import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.providers.WikiProvider;
+import org.apache.wiki.api.spi.Wiki;
 
 import java.util.Date;
 import java.util.Enumeration;
@@ -71,17 +75,20 @@ public class WikiPage implements Page {
      * @param name   The name of the page.
      * @param context The context from where the page creation was triggered.
      */
-    public WikiPage( final Engine engine, final String name, final Context context ) throws WikiException {
+    public WikiPage( final Engine engine, final String name, final WikiPage templatePage ) throws WikiException {
         m_engine = engine;
         m_name = name;
         m_wiki = engine.getApplicationName();
 
-        // Get the content of the source page.
-        final Page templatePage = context.getPage();
-        final String templateText = m_engine.getManager( PageManager.class ).getText( templatePage );
+        // Process the template source page
+        final Context context = Wiki.context().create( m_engine, templatePage );
+        String sourceName = templatePage.getName();
+
+        // Get the contents of the source page.
+        final String templateText = engine.getManager( PageManager.class ).getText( templatePage );
         
-        // Save the content text for the new page to the repository.
-        m_engine.getManager( PageManager.class ).saveText(context, templateText);
+        // Save the content text of the new page to the repository.
+        engine.getManager( PageManager.class ).saveText(context, templateText);
     }
 
     /**
