@@ -68,6 +68,26 @@ public interface Session extends WikiEventListener {
     /** An authenticated user's session status. */
     String  AUTHENTICATED = "authenticated";
 
+    /** dev-sp1 not sure what to do here 
+    * Users cookie setting
+    */
+    //Boolean  hasCookiesEnabled = false;
+    
+
+    /** dev-sp1
+     * Returns <code>true</code> if the user has cookied enabled. 
+     * Cookies are disabled by default which prevents assertion or authentication by cookie.
+     *
+     * @return Returns <code>true</code> if the user has enabled cookies
+     */
+    boolean getCookiesEnabled();
+
+    /** dev-sp1
+     * Allow cookies to be set for the user
+    * @param selection Value for cookie preference. True to enable cookies, false to disable cookies.
+     */
+    void setCookiesEnabled(boolean selection);
+
     /**
      * Returns <code>true</code> if the user is considered asserted via a session cookie; that is, the Subject contains the Principal
      * Role.ASSERTED.

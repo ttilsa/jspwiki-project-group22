@@ -42,7 +42,7 @@
     <project.build.outputTimestamp>2020-12-09T19:21:00Z</project.build.outputTimestamp> <!-- will be changed by release plugin during releases -->
     <jdk.version>1.8</jdk.version>
     <jdk.javadoc.doclet.version>1.1.4</jdk.javadoc.doclet.version>
-    <maven.version>3.5</maven.version>
+    <maven.version>3.6</maven.version>
 
     <akismet-java.version>1.02</akismet-java.version>
     <awaitility.version>4.0.3</awaitility.version>
@@ -111,7 +111,13 @@
     <maven.compiler.source>${jdk.version}</maven.compiler.source> <!-- override values from parent pom -->
     <maven.compiler.target>${jdk.version}</maven.compiler.target>
     <minimize>true</minimize> <!-- wro4j compression -->
+	  
+    <sonar.projectKey>ttilsa_jspwiki-project-group22</sonar.projectKey>
+    <sonar.moduleKey>${artifactId}</sonar.moduleKey>
+    <sonar.organization>jspwiki-project-group22</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
   </properties>
+
 
   <scm>
     <connection>scm:git:https://github.com/apache/jspwiki.git</connection>

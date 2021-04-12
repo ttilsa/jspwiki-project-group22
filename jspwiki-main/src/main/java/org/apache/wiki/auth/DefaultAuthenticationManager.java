@@ -160,17 +160,19 @@ public class DefaultAuthenticationManager implements AuthenticationManager {
         CallbackHandler handler = null;
         final Map< String, String > options = EMPTY_MAP;
 
+        
         // If user not authenticated, check if container logged them in, or if there's an authentication cookie
-        if ( !session.isAuthenticated() ) {
+        // dev-sp1 Check that cookies are enabled, can't login with cookies disabled
+        if ( !session.isAuthenticated() && session.getCookiesEnabled() ) {
             // Create a callback handler
             handler = new WebContainerCallbackHandler( m_engine, request );
-
+        
             // Execute the container login module, then (if that fails) the cookie auth module
             Set< Principal > principals = authenticationMgr.doJAASLogin( WebContainerLoginModule.class, handler, options );
             if ( principals.size() == 0 && authenticationMgr.allowsCookieAuthentication() ) {
                 principals = authenticationMgr.doJAASLogin( CookieAuthenticationLoginModule.class, handler, options );
             }
-
+            
             // If the container logged the user in successfully, tell the Session (and add all of the Principals)
             if ( principals.size() > 0 ) {
                 fireEvent( WikiSecurityEvent.LOGIN_AUTHENTICATED, getLoginPrincipal( principals ), session );
@@ -184,7 +186,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager {
         }
 
         // If user still not authenticated, check if assertion cookie was supplied
-        if ( !session.isAuthenticated() && authenticationMgr.allowsCookieAssertions() ) {
+        if ( !session.isAuthenticated() && authenticationMgr.allowsCookieAssertions() && session.getCookiesEnabled() ) {
             // Execute the cookie assertion login module
             final Set< Principal > principals = authenticationMgr.doJAASLogin( CookieAssertionLoginModule.class, handler, options );
             if ( principals.size() > 0 ) {
@@ -193,7 +195,7 @@ public class DefaultAuthenticationManager implements AuthenticationManager {
         }
 
         // If user still anonymous, use the remote address
-        if( session.isAnonymous() ) {
+        if( session.isAnonymous() && session.getCookiesEnabled() ) {
             final Set< Principal > principals = authenticationMgr.doJAASLogin( AnonymousLoginModule.class, handler, options );
             if( principals.size() > 0 ) {
                 fireEvent( WikiSecurityEvent.LOGIN_ANONYMOUS, getLoginPrincipal( principals ), session );

@@ -18,6 +18,7 @@
  */
 package org.apache.wiki;
 
+import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
 import org.apache.wiki.api.core.Page;
 import org.apache.wiki.api.providers.PageProvider;
@@ -25,6 +26,8 @@ import org.apache.wiki.auth.acl.Acl;
 import org.apache.wiki.auth.acl.AclEntry;
 import org.apache.wiki.auth.acl.AclImpl;
 import org.apache.wiki.pages.PageManager;
+import org.apache.wiki.api.exceptions.WikiException;
+import org.apache.wiki.api.spi.Wiki;
 
 import java.util.Date;
 import java.util.Enumeration;
@@ -60,6 +63,28 @@ public class WikiPage implements Page {
         m_engine = engine;
         m_name = name;
         m_wiki = engine.getApplicationName();
+    }
+
+    /**
+     * Create a new WikiPage using existing page content as template.
+     *
+     * @param engine The Engine that owns this page.
+     * @param name   The name of the page.
+     * @param context The context from where the page creation was triggered.
+     */
+    public WikiPage( final Engine engine, final String name, final WikiPage templatePage ) throws WikiException {
+        m_engine = engine;
+        m_name = name;
+        m_wiki = engine.getApplicationName();
+
+        // Process the template source page
+        final Context context = Wiki.context().create( m_engine, templatePage );
+
+        // Get the contents of the source page.
+        final String templateText = engine.getManager( PageManager.class ).getText( templatePage );
+        
+        // Save the content text of the new page to the repository.
+        engine.getManager( PageManager.class ).saveText(context, templateText);
     }
 
     /**
@@ -330,7 +355,7 @@ public class WikiPage implements Page {
             
         return p;
     }
-    
+
     /**
      *  Compares a page with another by name using the defined PageNameComparator.  If the same name, compares their versions.
      *  
