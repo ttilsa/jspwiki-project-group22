@@ -20,16 +20,13 @@ package org.apache.wiki;
 
 import org.apache.wiki.api.core.Context;
 import org.apache.wiki.api.core.Engine;
-import org.apache.wiki.WikiEngine;
 import org.apache.wiki.api.core.Page;
 import org.apache.wiki.api.providers.PageProvider;
 import org.apache.wiki.auth.acl.Acl;
 import org.apache.wiki.auth.acl.AclEntry;
 import org.apache.wiki.auth.acl.AclImpl;
 import org.apache.wiki.pages.PageManager;
-import org.apache.wiki.pages.DefaultPageManager;
 import org.apache.wiki.api.exceptions.WikiException;
-import org.apache.wiki.api.providers.WikiProvider;
 import org.apache.wiki.api.spi.Wiki;
 
 import java.util.Date;
@@ -82,7 +79,6 @@ public class WikiPage implements Page {
 
         // Process the template source page
         final Context context = Wiki.context().create( m_engine, templatePage );
-        String sourceName = templatePage.getName();
 
         // Get the contents of the source page.
         final String templateText = engine.getManager( PageManager.class ).getText( templatePage );
